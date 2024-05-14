@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>demo</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"/>
+	<style type="text/css" media="screen">
+		#app{
+			width: 400px;
+			margin: 100px auto;
+		}
+		.my-swipe .van-swipe-item {
+            font-size: 20px;
+            height: 240px;
+            text-align: center;
+        }
+		.my-swipe .van-swipe-item img {
+            width: 100%;
+            height: 100%;
+        }
+	</style>
+</head>
+<body>
+	<div id="app">		
+     	<van-checkbox-group v-model="formData.postCode" :max="1" class="upgrade-container" @change="postCodeChange">
+	        <div v-for="(item, index) in upgradeOptions" :key="item.code">
+	          <div class="upgrade-item">
+	            <van-checkbox shape="square" checked-color="#ff3600" :name="item.code" @click="postCodeClick(item.code)">
+	              {{item.value}}
+	            </van-checkbox>
+	          </div>
+	        </div>
+	    </van-checkbox-group>
+
+	</div>
+</body>
+<!-- 引入 Vue 和 Vant 的 JS 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+
+<script>
+  // 在 #app 标签下渲染一个按钮组件
+  new Vue({
+    el: '#app',
+    data() {
+    	return {
+		    upgradeOptions: [
+		    	{ code: 1, value: 'item1' },
+		    	{ code: 2, value: 'item2' },
+		    	{ code: 3, value: 'item3' },
+		    ],
+		    formData: {
+		    	postCode: []
+		    }
+    	}
+    },
+    mounted() {
+
+    },
+    methods: {
+ 	    // 升级包选择
+	    postCodeChange() {
+	    	console.log(this.formData.postCode)
+	    },
+
+	    // 升级包点击
+	    postCodeClick(code) {
+	    	console.log(code)
+	    },
+  	},
+  });
+
+
+
+
+</script>
+</html>
+
+
+
+
