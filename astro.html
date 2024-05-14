@@ -76,7 +76,7 @@
     </style>
   </head>
   <body>
-    <!-- <div id="mask"></div> -->
+    <div id="mask"></div>
     <div id="app" class="container">
       <div class="stat">
         <van-icon
@@ -162,9 +162,9 @@
 
         if (astrocards) this.cards = JSON.parse(astrocards);
       },
-      // mounted () {
-      //   document.getElementById("mask").style.display = "inline-flex"
-      // },
+      mounted () {
+        document.getElementById("mask").style.display = "none"
+      },
       methods: {
         onChange(value) {
           localStorage.setItem("astrocards", JSON.stringify(this.cards));
