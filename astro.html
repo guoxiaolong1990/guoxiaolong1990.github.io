@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>卡片管理</title>
+    <title>阿童木卡片管理</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
@@ -29,7 +29,7 @@
       .card {
         width: 50%;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 16px;
       }
       .card img {
         width: 100%;
@@ -64,9 +64,19 @@
       .item .num{
         text-align: right;
       }
+      .mask{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: #fff;
+      }
     </style>
   </head>
   <body>
+    <!-- <div id="mask"></div> -->
     <div id="app" class="container">
       <div class="stat">
         <van-icon
@@ -78,7 +88,7 @@
         ></van-icon>
       </div>
       <div class="card" v-for="card in cards" :key="card.id">
-        <div class="pic"><img src="pic1.jpeg" alt="" /></div>
+        <div class="pic"><img :src="card.img" alt="" /></div>
         <div class="name">{{ card.name }}</div>
         <van-stepper
           v-model="card.num"
@@ -119,22 +129,22 @@
         return {
           isShowStatBox: false,
           cards: [
-            { id: 1, num: 0, name: "阿童木" },
-            { id: 2, num: 0, name: "白博士" },
-            { id: 3, num: 0, name: "峰女" },
-            { id: 4, num: 0, name: "鸟妈" },
-            { id: 5, num: 0, name: "蓝金刚" },
-            { id: 6, num: 0, name: "机器人" },
-            { id: 7, num: 0, name: "小女孩" },
-            { id: 8, num: 0, name: "正义联盟" },
-            { id: 9, num: 0, name: "小红人" },
-            { id: 10, num: 0, name: "跑酷狗" },
-            { id: 11, num: 0, name: "枪战士" },
-            { id: 12, num: 0, name: "蓝骑士" },
-            { id: 13, num: 0, name: "绿巨人" },
-            { id: 14, num: 0, name: "机器狗" },
-            { id: 15, num: 0, name: "黑博士" },
-            { id: 16, num: 0, name: "全家福" },
+            { id: 1, num: 0, name: "阿童木", img: '1.png' },
+            { id: 2, num: 0, name: "白博士", img: '2.png' },
+            { id: 3, num: 0, name: "峰女", img: '3.png' },
+            { id: 4, num: 0, name: "鸟妈", img: '4.png' },
+            { id: 5, num: 0, name: "蓝金刚", img: '5.png' },
+            { id: 6, num: 0, name: "机器人", img: '6.png' },
+            { id: 7, num: 0, name: "小女孩", img: '7.png' },
+            { id: 8, num: 0, name: "正义联盟", img: '8.png' },
+            { id: 9, num: 0, name: "小红人", img: '9.png' },
+            { id: 10, num: 0, name: "跑酷狗", img: '10.png' },
+            { id: 11, num: 0, name: "枪战士", img: '11.png' },
+            { id: 12, num: 0, name: "蓝骑士", img: '12.png' },
+            { id: 13, num: 0, name: "绿巨人", img: '13.png' },
+            { id: 14, num: 0, name: "机器狗", img: '14.png' },
+            { id: 15, num: 0, name: "黑博士", img: '15.png' },
+            { id: 16, num: 0, name: "全家福", img: '16.png' },
           ],
         };
       },
@@ -152,6 +162,9 @@
 
         if (astrocards) this.cards = JSON.parse(astrocards);
       },
+      // mounted () {
+      //   document.getElementById("mask").style.display = "inline-flex"
+      // },
       methods: {
         onChange(value) {
           localStorage.setItem("astrocards", JSON.stringify(this.cards));
