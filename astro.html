@@ -1,83 +1,174 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>demo</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"/>
-	<style type="text/css" media="screen">
-		#app{
-			width: 400px;
-			margin: 100px auto;
-		}
-		.my-swipe .van-swipe-item {
-            font-size: 20px;
-            height: 240px;
-            text-align: center;
+  <head>
+    <title>卡片管理</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/vant/2.13.2/index.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      #app {
+        margin: auto;
+        max-width: 500px;
+      }
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .stat {
+        background: #07c160;
+        position: fixed;
+        right: 0;
+        top: 40%;
+        padding: 4px;
+      }
+      .card {
+        width: 50%;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .card img {
+        width: 100%;
+      }
+      .footer {
+        margin: 40px auto 12px;
+      }
+      .dialog-content{
+        margin: 20px auto 0;
+        width: 200px;
+      }
+      .dialog-content img{
+        width: 100%;
+      }
+      .total{
+        margin: 10px;
+        text-align: center;
+      }
+      .total-num{
+        font-size: 30px;
+        font-weight: bold;
+        color: rgba(0,91,171, 1)
+      }
+      .list{
+        width: 120px;
+        margin: 20px auto;
+      }
+      .list .item{
+        display: flex;
+        justify-content:space-between
+      }
+      .item .num{
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="stat">
+        <van-icon
+          class="stat"
+          color="#fff"
+          size="30px"
+          name="send-gift"
+          @click="isShowStatBox = true"
+        ></van-icon>
+      </div>
+      <div class="card" v-for="card in cards" :key="card.id">
+        <div class="pic"><img src="pic1.jpeg" alt="" /></div>
+        <div class="name">{{ card.name }}</div>
+        <van-stepper
+          v-model="card.num"
+          min="0"
+          max="100"
+          integer
+          input-width="40px"
+          button-size="32px"
+          @change="onChange"
+        />
+      </div>
+      <div class="footer">
+        <van-button type="primary" @click="clear">清空数据</van-button>
+      </div>
+
+      <van-dialog v-model="isShowStatBox" title="数据统计">
+        <div class="dialog-content">
+          <div class="total">
+            总战绩: <span class="total-num">{{ total }}张</span>
+          </div>
+          <div class="list">
+            <div class="item" v-for="card in cards" :key="card.id">
+              <div class="name">{{card.name}}</div>
+              <div class="num">{{card.num}} 张</div>
+            </div>
+          </div>
+        </div>
+      </van-dialog>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.16/vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vant/2.13.2/vant.min.js"></script>
+
+  <script>
+    let vm = new Vue({
+      el: "#app",
+      data() {
+        return {
+          isShowStatBox: false,
+          cards: [
+            { id: 1, num: 0, name: "阿童木" },
+            { id: 2, num: 0, name: "白博士" },
+            { id: 3, num: 0, name: "峰女" },
+            { id: 4, num: 0, name: "鸟妈" },
+            { id: 5, num: 0, name: "蓝金刚" },
+            { id: 6, num: 0, name: "机器人" },
+            { id: 7, num: 0, name: "小女孩" },
+            { id: 8, num: 0, name: "正义联盟" },
+            { id: 9, num: 0, name: "小红人" },
+            { id: 10, num: 0, name: "跑酷狗" },
+            { id: 11, num: 0, name: "枪战士" },
+            { id: 12, num: 0, name: "蓝骑士" },
+            { id: 13, num: 0, name: "绿巨人" },
+            { id: 14, num: 0, name: "机器狗" },
+            { id: 15, num: 0, name: "黑博士" },
+            { id: 16, num: 0, name: "全家福" },
+          ],
+        };
+      },
+      computed: {
+        total() {
+          let result = 0
+          this.cards.forEach(d => {
+            result += d.num
+          })
+          return result
         }
-		.my-swipe .van-swipe-item img {
-            width: 100%;
-            height: 100%;
-        }
-	</style>
-</head>
-<body>
-	<div id="app">		
-     	<van-checkbox-group v-model="formData.postCode" :max="1" class="upgrade-container" @change="postCodeChange">
-	        <div v-for="(item, index) in upgradeOptions" :key="item.code">
-	          <div class="upgrade-item">
-	            <van-checkbox shape="square" checked-color="#ff3600" :name="item.code" @click="postCodeClick(item.code)">
-	              {{item.value}}
-	            </van-checkbox>
-	          </div>
-	        </div>
-	    </van-checkbox-group>
+      },
+      created() {
+        const astrocards = localStorage.getItem("astrocards");
 
-	</div>
-</body>
-<!-- 引入 Vue 和 Vant 的 JS 文件 -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+        if (astrocards) this.cards = JSON.parse(astrocards);
+      },
+      methods: {
+        onChange(value) {
+          localStorage.setItem("astrocards", JSON.stringify(this.cards));
+        },
 
-<script>
-  // 在 #app 标签下渲染一个按钮组件
-  new Vue({
-    el: '#app',
-    data() {
-    	return {
-		    upgradeOptions: [
-		    	{ code: 1, value: 'item1' },
-		    	{ code: 2, value: 'item2' },
-		    	{ code: 3, value: 'item3' },
-		    ],
-		    formData: {
-		    	postCode: []
-		    }
-    	}
-    },
-    mounted() {
-
-    },
-    methods: {
- 	    // 升级包选择
-	    postCodeChange() {
-	    	console.log(this.formData.postCode)
-	    },
-
-	    // 升级包点击
-	    postCodeClick(code) {
-	    	console.log(code)
-	    },
-  	},
-  });
-
-
-
-
-</script>
+        clear() {
+          vant.Dialog.confirm({
+            title: "提示",
+            message: "是否确认清空所有数据？",
+          })
+            .then(() => {
+              localStorage.removeItem("astrocards");
+              location.reload();
+            })
+            .catch(() => {});
+        },
+      },
+    });
+  </script>
 </html>
-
-
-
-
