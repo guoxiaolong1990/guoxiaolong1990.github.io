@@ -24,7 +24,17 @@
         position: fixed;
         right: 0;
         top: 40%;
-        padding: 4px;
+        width: 40px;
+      }
+      .flex-center {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid #e2e2e2;
+      }
+      .flex-center:nth-last-child{
+        border: none;
       }
       .card {
         width: 50%;
@@ -33,63 +43,64 @@
       }
       .card img {
         width: 100%;
-        height: -moz-calc(width* 0.79);
-        height: -webkit-calc(width* 0.79);
-        height: calc(width * 0.79);
+        min-height: 290px;
       }
       .footer {
         margin: 40px auto 12px;
       }
-      .dialog-content{
-        margin: 20px auto 0;
-        width: 200px;
+      .dialog-content {
+        margin: 10px auto 0;
+        padding: 0 20px;
       }
-      .dialog-content img{
+      .dialog-content img {
         width: 100%;
       }
-      .total{
+      .total {
+        font-size: 18px;
         margin: 10px;
         text-align: center;
       }
-      .total-num{
+      .total-num {
         font-size: 30px;
         font-weight: bold;
-        color: rgba(0,91,171, 1)
+        color: rgba(0, 91, 171, 1);
       }
-      .list{
+      .list {
         width: 120px;
         margin: 20px auto;
       }
-      .list .item{
+      .list .item {
         display: flex;
-        justify-content:space-between
+        justify-content: space-between;
       }
-      .item .num{
+      .item .num {
         text-align: right;
       }
-      #mask{
+      .item .num .hilite{
+        font-size: 1.2em;
+        color: rgba(0, 91, 171, 1);
+      }
+      #mask {
         position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 99;
+        z-index: 9999;
         background: #fff;
+      }
+      .num-input{
+        width: 80px;
+        margin: 6px;
+        border: none;
+        border-bottom: 1px solid;
+        text-align: right;
       }
     </style>
   </head>
   <body>
     <div id="mask"></div>
     <div id="app" class="container">
-      <div class="stat">
-        <van-icon
-          class="stat"
-          color="#fff"
-          size="30px"
-          name="send-gift"
-          @click="isShowStatBox = true"
-        ></van-icon>
-      </div>
       <div class="card" v-for="card in cards" :key="card.id">
         <div class="pic"><img :src="card.img" alt="" /></div>
         <div class="name">{{ card.name }}</div>
@@ -107,17 +118,47 @@
         <van-button type="primary" @click="clear">清空数据</van-button>
       </div>
 
+      <!-- 右侧悬浮按钮 -->
+      <div class="stat">
+        <div class="flex-center">
+          <van-icon
+            color="#fff"
+            size="20px"
+            name="send-gift"
+            @click="isShowStatBox = true"
+          ></van-icon>
+        </div>
+        <div class="flex-center">
+          <van-icon
+            color="#fff"
+            size="20px"
+            name="cash-back-record"
+            @click="isShowCalcBox = true"
+          />
+        </div>
+      </div>
+
       <van-dialog v-model="isShowStatBox" title="数据统计">
-        <div class="dialog-content">
+        <div class="dialog-content" style="width: 200px;">
           <div class="total">
-            总战绩: <span class="total-num">{{ total }}张</span>
+            </span>总战绩: <span class="total-num">{{ total }}张</span>
           </div>
           <div class="list">
             <div class="item" v-for="card in cards" :key="card.id">
               <div class="name">{{card.name}}</div>
-              <div class="num">{{card.num}} 张</div>
+              <div class="num"><span  :class="{'hilite': card.num>0}">{{card.num}} </span> 张</div>
             </div>
           </div>
+        </div>
+      </van-dialog>
+      <van-dialog v-model="isShowCalcBox" title="彩券收益计算">
+        <div class="dialog-content">
+          <div style="text-align: center;">开始 - 结束</div>
+          <div>代币 <input class="num-input" type="number" v-model="calcObj.startToken"> - <input class="num-input" type="number" v-model="calcObj.endToken"></div>
+          <div>彩券 <input class="num-input" type="number" v-model="calcObj.startTombola"> - <input class="num-input" type="number" v-model="calcObj.endTombola"></div>
+        </div>
+        <div style="text-align: center;">
+          <van-button type="info" style="width: 200px; margin: 12px;" @click="startCalc">{{ calcResult }}</van-button>
         </div>
       </van-dialog>
     </div>
@@ -131,33 +172,121 @@
       data() {
         return {
           isShowStatBox: false,
+          isShowCalcBox: false,
+          calcResult: '计算',
+          calcObj: {
+            startToken: '',
+            endToken: '',
+            startTombola: '',
+            endTombola: '',
+          },
           cards: [
-            { id: 1, num: 0, name: "阿童木", img: 'https://img2.imgtp.com/2024/05/14/5UoL7RKg.png' },
-            { id: 2, num: 0, name: "白博士", img: 'https://img2.imgtp.com/2024/05/14/B4Pxulye.png' },
-            { id: 3, num: 0, name: "峰女", img: 'https://img2.imgtp.com/2024/05/14/4nRGTqqQ.png' },
-            { id: 4, num: 0, name: "鸟妈", img: 'https://img2.imgtp.com/2024/05/14/FDOl5cO9.png' },
-            { id: 5, num: 0, name: "蓝金刚", img: 'https://img2.imgtp.com/2024/05/14/UgwDOSZu.png' },
-            { id: 6, num: 0, name: "机器人", img: 'https://img2.imgtp.com/2024/05/14/MxHAiDVr.png' },
-            { id: 7, num: 0, name: "小女孩", img: 'https://img2.imgtp.com/2024/05/14/RWXVQm4f.png' },
-            { id: 8, num: 0, name: "正义联盟", img: 'https://img2.imgtp.com/2024/05/14/FVljb1EW.png' },
-            { id: 9, num: 0, name: "小红人", img: 'https://img2.imgtp.com/2024/05/14/bRJfNZIE.png' },
-            { id: 10, num: 0, name: "跑酷狗", img: 'https://img2.imgtp.com/2024/05/14/RqnKgxBE.png' },
-            { id: 11, num: 0, name: "枪战士", img: 'https://img2.imgtp.com/2024/05/14/ckKWAV13.png' },
-            { id: 12, num: 0, name: "蓝骑士", img: 'https://img2.imgtp.com/2024/05/14/cU6T0oYy.png' },
-            { id: 13, num: 0, name: "绿巨人", img: 'https://img2.imgtp.com/2024/05/14/N1Uxiq6t.png' },
-            { id: 14, num: 0, name: "机器狗", img: 'https://img2.imgtp.com/2024/05/14/20paH3BL.png' },
-            { id: 15, num: 0, name: "黑博士", img: 'https://img2.imgtp.com/2024/05/14/LfU8bo5L.png' },
-            { id: 16, num: 0, name: "全家福", img: 'https://img2.imgtp.com/2024/05/14/3yOwO30w.png' },
+            {
+              id: 1,
+              num: 0,
+              name: "阿童木",
+              img: "https://img2.imgtp.com/2024/05/14/5UoL7RKg.png",
+            },
+            {
+              id: 2,
+              num: 0,
+              name: "白博士",
+              img: "https://img2.imgtp.com/2024/05/14/B4Pxulye.png",
+            },
+            {
+              id: 3,
+              num: 0,
+              name: "峰女",
+              img: "https://img2.imgtp.com/2024/05/14/4nRGTqqQ.png",
+            },
+            {
+              id: 4,
+              num: 0,
+              name: "鸟妈",
+              img: "https://img2.imgtp.com/2024/05/14/FDOl5cO9.png",
+            },
+            {
+              id: 5,
+              num: 0,
+              name: "蓝金刚",
+              img: "https://img2.imgtp.com/2024/05/14/UgwDOSZu.png",
+            },
+            {
+              id: 6,
+              num: 0,
+              name: "机器人",
+              img: "https://img2.imgtp.com/2024/05/14/MxHAiDVr.png",
+            },
+            {
+              id: 7,
+              num: 0,
+              name: "小女孩",
+              img: "https://img2.imgtp.com/2024/05/14/RWXVQm4f.png",
+            },
+            {
+              id: 8,
+              num: 0,
+              name: "正义联盟",
+              img: "https://img2.imgtp.com/2024/05/14/FVljb1EW.png",
+            },
+            {
+              id: 9,
+              num: 0,
+              name: "小红人",
+              img: "https://img2.imgtp.com/2024/05/14/bRJfNZIE.png",
+            },
+            {
+              id: 10,
+              num: 0,
+              name: "跑酷狗",
+              img: "https://img2.imgtp.com/2024/05/14/RqnKgxBE.png",
+            },
+            {
+              id: 11,
+              num: 0,
+              name: "枪战士",
+              img: "https://img2.imgtp.com/2024/05/14/ckKWAV13.png",
+            },
+            {
+              id: 12,
+              num: 0,
+              name: "蓝骑士",
+              img: "https://img2.imgtp.com/2024/05/14/cU6T0oYy.png",
+            },
+            {
+              id: 13,
+              num: 0,
+              name: "绿巨人",
+              img: "https://img2.imgtp.com/2024/05/14/N1Uxiq6t.png",
+            },
+            {
+              id: 14,
+              num: 0,
+              name: "机器狗",
+              img: "https://img2.imgtp.com/2024/05/14/20paH3BL.png",
+            },
+            {
+              id: 15,
+              num: 0,
+              name: "黑博士",
+              img: "https://img2.imgtp.com/2024/05/14/LfU8bo5L.png",
+            },
+            {
+              id: 16,
+              num: 0,
+              name: "全家福",
+              img: "https://img2.imgtp.com/2024/05/14/3yOwO30w.png",
+            },
           ],
         };
       },
       computed: {
         total() {
-          let result = 0
-          this.cards.forEach(d => {
-            result += d.num
-          })
-          return result
+          let result = 0;
+          this.cards.forEach((d) => {
+            result += d.num;
+          });
+          return result;
         }
       },
       created() {
@@ -165,8 +294,8 @@
 
         if (astrocards) this.cards = JSON.parse(astrocards);
       },
-      mounted () {
-        document.getElementById("mask").style.display = "none"
+      mounted() {
+        document.getElementById("mask").style.display = "none";
       },
       methods: {
         onChange(value) {
@@ -184,6 +313,18 @@
             })
             .catch(() => {});
         },
+
+        startCalc() {
+          let result = '计算'
+          if(this.calcObj.startToken && this.calcObj.endToken && this.calcObj.startTombola && this.calcObj.endTombola) {
+            console.log(this.calcObj)
+            const { startToken, endToken, startTombola, endTombola } = this.calcObj
+            result = (parseInt(endTombola) - parseInt(startTombola))/(parseInt(startToken)-parseInt(endToken)) * 100
+            console.log('result :>>', result)
+            result = parseInt(result) + ' 彩券每100币'
+          }
+          this.calcResult = result
+        }
       },
     });
   </script>
